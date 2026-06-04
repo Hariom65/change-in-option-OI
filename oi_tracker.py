@@ -10,13 +10,21 @@ CHAT_ID = os.getenv("CHAT_ID")
 url = "https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY"
 
 headers = {
-    "user-agent": "Mozilla/5.0"
+    "User-Agent": "Mozilla/5.0",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Referer": "https://www.nseindia.com/",
 }
 
 session = requests.Session()
-session.get("https://www.nseindia.com", headers=headers)
+
+homepage = "https://www.nseindia.com"
+
+session.get(homepage, headers=headers)
 
 response = session.get(url, headers=headers)
+
+print(response.text)
 
 data = response.json()
 
