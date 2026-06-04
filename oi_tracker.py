@@ -3,25 +3,41 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
-from nsepython import *
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-data = nse_optionchain_scrapper("NIFTY")
+url = "https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY"
 
-records = data["filtered"]["data"]
+headers = {
+    "User-Agent": "Mozilla/5.0",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://www.nseindia.com/",
+}
+
+session = requests.Session()
+
+session.get("https://www.nseindia.com", headers=headers)
+
+response = session.get(url, headers=headers)
+
+print(response.status_code)
+print(response.text[:500])
+
+data = response.json()
+
+records = data["records"]["data"]
 
 ce_total = 0
 pe_total = 0
 
 for item in records:
 
-    if item.get('CE'):
-        ce_total += item['CE'].get('changeinOpenInterest', 0)
+    if "CE" in item:
+        ce_total += item["CE"].get("changeinOpenInterest", 0)
 
-    if item.get('PE'):
-        pe_total += item['PE'].get('changeinOpenInterest', 0)
+    if "PE" in item:
+        pe_total += item["PE"].get("changeinOpenInterest", 0)
 
 now = datetime.now().strftime("%H:%M")
 
@@ -43,8 +59,8 @@ data_df.to_csv(csv_file, index=False)
 
 plt.figure(figsize=(10,5))
 
-plt.plot(data_df['time'], data_df['ce_oi'], label='CE OI')
-plt.plot(data_df['time'], data_df['pe_oi'], label='PE OI')
+plt.plot(data_df["time"], data_df["ce_oi"], label="CE OI")
+plt.plot(data_df["time"], data_df["pe_oi"], label="PE OI")
 
 plt.xticks(rotation=45)
 
