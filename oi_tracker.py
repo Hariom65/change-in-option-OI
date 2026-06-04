@@ -10,7 +10,7 @@ CHAT_ID = os.getenv("CHAT_ID")
 
 data = nse_optionchain_scrapper("NIFTY")
 
-records = data['records']['data']
+records = data["filtered"]["data"]
 
 ce_total = 0
 pe_total = 0
