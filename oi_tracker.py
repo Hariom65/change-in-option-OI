@@ -3,30 +3,12 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
+from nsepython import *
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-url = "https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY"
-
-headers = {
-    "User-Agent": "Mozilla/5.0",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Referer": "https://www.nseindia.com/",
-}
-
-session = requests.Session()
-
-homepage = "https://www.nseindia.com"
-
-session.get(homepage, headers=headers)
-
-response = session.get(url, headers=headers)
-
-print(response.text)
-
-data = response.json()
+data = nse_optionchain_scrapper("NIFTY")
 
 records = data['records']['data']
 
@@ -98,4 +80,4 @@ with open(graph_file, "rb") as photo:
         }
     )
 
-print("Graph sent to Telegram")
+print("Graph sent successfully")
