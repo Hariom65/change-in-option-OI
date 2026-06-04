@@ -22,7 +22,6 @@ session.get("https://www.nseindia.com", headers=headers)
 response = session.get(url, headers=headers)
 
 print(response.status_code)
-print(response.text[:500])
 
 data = response.json()
 
